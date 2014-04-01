@@ -3,7 +3,10 @@ teseo-rdf
 
 tool to convert the legacy data format to skos rdf
 
-* requires: maven
+* requires:
+
+  * jdk 1.7+
+  * maven
 
 * build instructions:
 
