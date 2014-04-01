@@ -38,11 +38,11 @@ public class AppTest
         return new TestSuite( AppTest.class );
     }
     
-    long testMain(String outputFile, String xsl, String xl) throws Exception
+    long testMain(String outputFile, String xsl) throws Exception
     {
         File out = new File(outputFile);
         if (out.exists()) out.delete();
-        String args[] = {"input/export-test.dat",outputFile,xsl,xl};
+        String args[] = {"input/export-test.dat", outputFile, xsl};
         TeseoRdf.main(args);
         long length = (new File(outputFile)).length();
         System.out.println("\n*** output file " + outputFile + " has " + length + " bytes length ***\n");
@@ -69,10 +69,10 @@ public class AppTest
             long result;
             //testMain("output/teseo.rdf", "xsl/teseo.xsl", "xl:no");
             //testMain("output/teseo-both.rdf", "xsl/teseo.xsl", "xl:both");
-            result = testMain("output/teseo-plain.rdf", "xsl/teseo-plain.xsl", "xl:yes");
-            assertEquals(result, 10198482);
-            result = testMain("output/teseo.rdf", "xsl/teseo.xsl", "xl:yes");
-            assertEquals(result, 11856344);
+            result = testMain("output/teseo-plain.rdf", "xsl/teseo-plain.xsl");
+            assertEquals(result, 11109065);
+            result = testMain("output/teseo.rdf", "xsl/teseo.xsl");
+            assertEquals(result, 12508880);
         }
         catch (Exception e) {
             assert(false);
