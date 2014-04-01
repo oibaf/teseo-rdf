@@ -8,7 +8,9 @@
  <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
  <xsl:variable name="lns" select="'http://dati.senato.it/teseo/'"/>
  <xsl:variable name="lnsTes" select="concat($lns,'tes')"/>
- <xsl:variable name="lnsGeo" select="concat($lns,'geo')"/>
+ <xsl:variable name="lnsRegioni" select="concat($lns,'regioni')"/>
+ <xsl:variable name="lnsProvince" select="concat($lns,'province')"/>
+ <xsl:variable name="lnsComuni" select="concat($lns,'comuni')"/>
  <xsl:variable name="lnsNom" select="concat($lns,'nom')"/>
  
  <xsl:param name="xl" select="'both'"/>
@@ -35,30 +37,43 @@
  </xsl:template>
  
  
- <xsl:template match="RP|PC">
-  <skos:narrower rdf:resource="{concat($lnsGeo,'/',.)}"/>
+ <xsl:template match="RP">
+  <skos:narrower rdf:resource="{concat($lnsProvince,'/',.)}"/>
  </xsl:template>
 
- <xsl:template match="PR|CP">
-  <skos:broader rdf:resource="{concat($lnsGeo,'/',.)}"/>
+ <xsl:template match="PC">
+  <skos:narrower rdf:resource="{concat($lnsComuni,'/',.)}"/>
+ </xsl:template>
+ 
+ <xsl:template match="PR">
+  <skos:broader rdf:resource="{concat($lnsRegioni,'/',.)}"/>
+ </xsl:template>
+ 
+ <xsl:template match="CP">
+  <skos:broader rdf:resource="{concat($lnsProvince,'/',.)}"/>
  </xsl:template>
  
  <xsl:template match="GEO">
-  <rdf:Description rdf:about="{concat($lnsGeo,'/',@id)}">
+  <xsl:variable name="ns">
+   <xsl:choose>
+    <xsl:when test="RP"><xsl:value-of select="$lnsRegioni"/></xsl:when>
+    <xsl:when test="PC"><xsl:value-of select="$lnsProvince"/></xsl:when>
+    <xsl:otherwise><xsl:value-of select="$lnsComuni"/></xsl:otherwise>
+   </xsl:choose> 
+  </xsl:variable>
+ 
+  <rdf:Description rdf:about="{concat($ns,'/',@id)}">
    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
    
-   <skos:inScheme rdf:resource="{$lnsGeo}"/>
-   
-   <xsl:variable name="id" select="@id"/>
-   <xsl:if test="PR">
-    <skos:topConceptOf rdf:resource="{$lnsGeo}"/>
-   </xsl:if>
+   <skos:inScheme rdf:resource="{$ns}"/>
+   <skos:topConceptOf rdf:resource="{$ns}"/>
+
    <xsl:apply-templates/>
   </rdf:Description>
   
   <xsl:if test="$xl='yes' or $xl='both'">
    <xsl:if test="name">
-    <rdf:Description rdf:about="{concat($lnsGeo,'/','xl_it_',@id)}">
+    <rdf:Description rdf:about="{concat($ns,'/','xl_it_',@id)}">
      <rdf:type rdf:resource="http://www.w3.org/2008/05/skos-xl#Label"/>
      <skosxl:literalForm xml:lang="it"><xsl:value-of select="name"/></skosxl:literalForm>
     </rdf:Description>
@@ -120,17 +135,17 @@
    <skosxl:altLabel rdf:resource="{concat($lnsTes,'/','xl_it_',$id)}"/>
   </xsl:if> 
  </xsl:template>
-
+ 
+ <!--
  <xsl:template match="TT"/>
- <!-- WRONG: by convention, skos:broader and skos:narrower are only used to assert immediate (i.e., direct) hierarchical links between two SKOS concepts.
-             may be skos:broaderTransitive is a better choice
+ -->
  <xsl:template match="TT">
   <xsl:variable name="id" select="."/>
   <xsl:if test="not(../BT[.=$id])">
-   <skos:broader rdf:resource="{concat($lnsTes,'/',.)}"/>
+   <skos:broaderTransitive rdf:resource="{concat($lnsTes,'/',.)}"/>
   </xsl:if> 
  </xsl:template>
- -->
+
  <xsl:template match="BT">
   <skos:broader rdf:resource="{concat($lnsTes,'/',.)}"/>
  </xsl:template>
@@ -155,29 +170,37 @@
 
    <rdf:Description rdf:about="{$lnsTes}">
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-    
     <xsl:for-each select="*/TES[@id=/*/TES/TT]">
      <skos:hasTopConcept rdf:resource="{concat($lnsTes,'/',@id)}"/>
     </xsl:for-each>
-     
    </rdf:Description>
 
-   <rdf:Description rdf:about="{$lnsGeo}">
+   <rdf:Description rdf:about="{$lnsRegioni}">
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-    
     <xsl:for-each select="*/GEO[RP]">
-     <skos:hasTopConcept rdf:resource="{concat($lnsGeo,'/',@id)}"/>
+     <skos:hasTopConcept rdf:resource="{concat($lnsRegioni,'/',@id)}"/>
     </xsl:for-each>
-     
    </rdf:Description>
 
+   <rdf:Description rdf:about="{$lnsProvince}">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    <xsl:for-each select="*/GEO[PC]">
+     <skos:hasTopConcept rdf:resource="{concat($lnsProvince,'/',@id)}"/>
+    </xsl:for-each>
+   </rdf:Description>
+
+   <rdf:Description rdf:about="{$lnsComuni}">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    <xsl:for-each select="*/GEO[CP]">
+     <skos:hasTopConcept rdf:resource="{concat($lnsComuni,'/',@id)}"/>
+    </xsl:for-each>
+   </rdf:Description>
+   
    <rdf:Description rdf:about="{$lnsNom}">
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-    
     <xsl:for-each select="*/NOM">
      <skos:hasTopConcept rdf:resource="{concat($lnsNom,'/',@id)}"/>
     </xsl:for-each>
-     
    </rdf:Description>
    
    <xsl:apply-templates/>

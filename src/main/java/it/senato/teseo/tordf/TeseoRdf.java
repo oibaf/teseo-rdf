@@ -38,7 +38,7 @@ public class TeseoRdf {
  static final int PREDICATE_LENGTH = 2;
  static final int OBJECT_OFFSET = 12;
  
- public static void main(String[] args) {
+ public static void main(String[] args) throws Exception {
   if (args.length<3){
    System.out.println("program arguments: <file in> <file out> <file xsl> [param:value...]");
    System.exit(-1);   
@@ -114,6 +114,10 @@ public class TeseoRdf {
    for (int j=3;j<args.length;j++) transformer.setParameter(args[j].split(":")[0], args[j].split(":")[1]);
    transformer.transform(new DOMSource(document), new StreamResult(out));
   }
-  catch(Exception e){e.printStackTrace();}
+  catch(Exception e){
+   e.printStackTrace();
+   //System.exit(-5);
+   throw e;
+  }
  }
 }
