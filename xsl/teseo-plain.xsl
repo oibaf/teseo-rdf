@@ -104,7 +104,7 @@
  
  <xsl:template match="name">
   <xsl:if test="$xl='no' or $xl='both'">
-   <skos:prefLabel><xsl:value-of select="."/></skos:prefLabel>
+   <skos:prefLabel xml:lang="it"><xsl:value-of select="."/></skos:prefLabel>
   </xsl:if>
   <xsl:if test="$xl='yes' or $xl='both'">
    <skosxl:prefLabel rdf:resource="{concat($lnsTes,'/','xl_it_',../@id)}"/>
@@ -114,7 +114,7 @@
  <xsl:template match="UF">
   <xsl:variable name="id" select="."/>
   <xsl:if test="$xl='no' or $xl='both'">
-   <skos:altLabel><xsl:value-of select="../../TES[@id=$id]/name"/></skos:altLabel>
+   <skos:altLabel xml:lang="it"><xsl:value-of select="../../TES[@id=$id]/name"/></skos:altLabel>
   </xsl:if> 
   <xsl:if test="$xl='yes' or $xl='both'">
    <skosxl:altLabel rdf:resource="{concat($lnsTes,'/','xl_it_',$id)}"/>
@@ -122,15 +122,15 @@
  </xsl:template>
 
  <xsl:template match="TT"/>
- <!-- WRONG: by convention, skos:broader and skos:narrower are only used to assert immediate (i.e., direct) hierarchical links between two SKOS concepts.
-             may be skos:broaderTransitive is a better choice
+ <!--
  <xsl:template match="TT">
   <xsl:variable name="id" select="."/>
   <xsl:if test="not(../BT[.=$id])">
-   <skos:broader rdf:resource="{concat($lnsTes,'/',.)}"/>
+   <skos:broaderTransitive rdf:resource="{concat($lnsTes,'/',.)}"/>
   </xsl:if> 
  </xsl:template>
  -->
+ 
  <xsl:template match="BT">
   <skos:broader rdf:resource="{concat($lnsTes,'/',.)}"/>
  </xsl:template>
@@ -144,7 +144,7 @@
  </xsl:template>
 
  <xsl:template match="note">
-  <skos:note><xsl:value-of select="."/></skos:note>
+  <skos:note xml:lang="it"><xsl:value-of select="."/></skos:note>
  </xsl:template>
  
  <xsl:template match="/">
