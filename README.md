@@ -19,6 +19,6 @@ tool to convert the legacy data format to skos rdf
   
 * usage instructions:
 
-  java -cp target/teseo-rdf-1.0-SNAPSHOT.jar it.senato.teseo.tordf.TeseoRdf  <file in> <file out> xsl/teseo.xsl
+  java -cp target/teseo-rdf-1.0-SNAPSHOT.jar it.senato.teseo.tordf.TeseoRdf  &lt;file in&gt; &lt;file out&gt; xsl/teseo.xsl
   
 * note: the java code is tailored on the input source
