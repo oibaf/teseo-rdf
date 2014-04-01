@@ -213,3 +213,11 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+output/teseo-plain.rdf
+output/teseo.rdf
+target/classes/it/senato/teseo/tordf/TeseoRdf.class
+target/maven-archiver/pom.properties
+target/test-classes/it/senato/teseo/tordf/TeseoRdf.class
+target/test-classes/it/senato/teseo/tordf/AppTest.class
+target/surefire-reports/it.senato.teseo.tordf.AppTest.txt
+target/surefire-reports/TEST-it.senato.teseo.tordf.AppTest.xml
