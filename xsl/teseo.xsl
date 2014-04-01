@@ -13,7 +13,7 @@
  <xsl:variable name="lnsComuni" select="concat($lns,'comuni')"/>
  <xsl:variable name="lnsNom" select="concat($lns,'nom')"/>
  
- <xsl:param name="xl" select="'both'"/>
+ <xsl:param name="xl" select="'yes'"/>
 
  <xsl:template match="NOM">
   <rdf:Description rdf:about="{concat($lnsNom,'/',@id)}">
